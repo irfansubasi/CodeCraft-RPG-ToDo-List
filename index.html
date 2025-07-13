@@ -7,6 +7,42 @@
     <title>Document</title>
   </head>
   <body>
+    <dialog id="quest-modal">
+      <form id="quest-form">
+        <h2>Add Quest</h2>
+        <div class="form-group">
+          <label for="quest-title">Quest Title <span>*</span></label>
+          <input type="text" id="quest-title" name="quest-title" required>
+        </div>
+        <div class="form-group">
+          <label for="quest-description">Quest Description</label>
+          <textarea id="quest-description" name="quest-description"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="quest-reward">Reward <span class="form-hint">Rewards will be calculated automatically based on priority and time. If you enter them yourself, they will be valid.</span></label>
+
+          <input type="number" id="quest-reward" name="quest-reward" placeholder="Enter ONLY if you want to set a specific reward">
+        </div>
+        <div class="form-group">
+          <label>Date and Time <span>*</span></label>
+          <input type="datetime-local" id="quest-time-limit" name="quest-time-limit" required>
+        </div>
+        <div class="form-group">
+          <label>Priority <span>*</span></label>
+          <div class="radio-group">
+            <input type="radio" id="high-priority" name="quest-priority" value="high" required hidden>
+            <label for="high-priority" class="priority high">High</label>
+            
+            <input type="radio" id="medium-priority" name="quest-priority" value="medium" hidden>
+            <label for="medium-priority" class="priority medium">Medium</label>
+            
+            <input type="radio" id="low-priority" name="quest-priority" value="low" hidden>
+            <label for="low-priority" class="priority low">Low</label>
+          </div>
+        </div>
+        <button type="submit" class="confirm-btn">Add Quest</button>
+      </form>
+    </dialog>
     <header>
       <div class="battle-container">
         <div class="stats player-stats">
@@ -128,7 +164,12 @@
             <h2>Quest Board</h2>
           </div>
           <div class="quests">
-            <div class="quest-item">
+            <div class="empty-quests">
+              <p>No quests yet!</p>
+              <p>Click the button below to add a quest</p>
+              <button class="add-quest-btn"><img src="./assets/quill.gif" alt="add-quest"></button>
+            </div>
+           <!--- <div class="quest-item">
               <h3>Insider's Week 2 Task</h3>
               <p>Complete the to-do app assigned as homework.</p>
               <div class="quest-details">
@@ -142,11 +183,12 @@
                     <span>19H 10M</span>
                 </div>
               </div>
-            </div>
-              
+            </div>  --->
           </div>
         </div>
       </section>
     </main>
+
+    <script src="app.js"></script>
   </body>
 </html>
