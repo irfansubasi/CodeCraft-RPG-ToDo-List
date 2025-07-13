@@ -18,7 +18,9 @@ let playerData = {
     level: 1,
     gold: 0,
     maxHealth: 100,
-    currentHealth: 100
+    currentHealth: 100,
+    experience: 0,
+    maxExperience: 100
 };
 
 let enemyData = {
@@ -54,36 +56,65 @@ function enemyDefeated() {
 }
 
 function calculateDamage(priority) {
-    switch(priority) {
-        case 'high':
-            return 20;
-        case 'medium':
-            return 15;
-        case 'low':
-            return 8;
-        default:
-            return 12;
-    }
+    const baseDamage = {
+        'high': 8,
+        'medium': 6,
+        'low': 3,
+        'default': 5
+    };
+    
+    const levelMultiplier = 1 + (playerData.level - 1) * 0.2;
+    return Math.round(baseDamage[priority] || baseDamage.default * levelMultiplier);
 }
 
 function calculatePlayerDamage(priority) {
-    switch(priority) {
-        case 'high':
-            return 15;
-        case 'medium':
-            return 10;
-        case 'low':
-            return 5;
-        default:
-            return 8;
-    }
+    const baseDamage = {
+        'high': 6,
+        'medium': 4,
+        'low': 2,
+        'default': 3
+    };
+    
+    const levelMultiplier = 1 + (playerData.level - 1) * 0.2;
+    return Math.round(baseDamage[priority] || baseDamage.default * levelMultiplier);
 }
 
 function updatePlayerInfo() {
     const playerInfo = document.querySelector('#player-info');
     if (playerInfo) {
-        playerInfo.textContent = `${playerData.class} - Level ${playerData.level} - ${playerData.gold} Gold`;
+        playerInfo.innerHTML = `${playerData.class} - Level ${playerData.level} - <img src="./assets/icons/coin.svg" alt="coin" class="player-coin"> ${playerData.gold}`;
     }
+}
+
+function updatePlayerExperience() {
+    const experienceFill = document.querySelector('.player-stats .experience-fill');
+    if (experienceFill) {
+        const experiencePercentage = (playerData.experience / playerData.maxExperience) * 100;
+        experienceFill.style.width = `${experiencePercentage}%`;
+        experienceFill.textContent = `${playerData.experience}/${playerData.maxExperience}`;
+    }
+}
+
+function addExperience(amount) {
+    playerData.experience += amount;
+    
+    if (playerData.experience >= playerData.maxExperience && playerData.level < 10) {
+        levelUp();
+    }
+    
+    updatePlayerExperience();
+    updatePlayerInfo();
+    savePlayerData();
+}
+
+function levelUp() {
+    playerData.level++;
+    playerData.experience = 0;
+    
+    updatePlayerHealth();
+    updatePlayerExperience();
+    updatePlayerInfo();
+    savePlayerData();
 }
 
 function updatePlayerHealth() {
@@ -155,6 +186,7 @@ function playDeathAnimation() {
 function addGold(amount) {
     playerData.gold += amount;
     updatePlayerInfo();
+    updateShopButtons();
 }
 
 function loadPlayerData() {
@@ -166,7 +198,9 @@ function loadPlayerData() {
             level: loadedData.level || 1,
             gold: loadedData.gold || 0,
             maxHealth: loadedData.maxHealth || 100,
-            currentHealth: loadedData.currentHealth || 100
+            currentHealth: loadedData.currentHealth || 100,
+            experience: loadedData.experience || 0,
+            maxExperience: loadedData.maxExperience || 100
         };
     } else {
         playerData = {
@@ -174,11 +208,14 @@ function loadPlayerData() {
             level: 1,
             gold: 0,
             maxHealth: 100,
-            currentHealth: 100
+            currentHealth: 100,
+            experience: 0,
+            maxExperience: 100
         };
     }
     updatePlayerInfo();
     updatePlayerHealth();
+    updatePlayerExperience();
 }
 
 function updateOldQuests() {
@@ -192,6 +229,10 @@ function updateOldQuests() {
         }
         if (quest.hasDamaged === undefined) {
             quest.hasDamaged = false;
+            updated = true;
+        }
+        if (quest.hasGivenExp === undefined) {
+            quest.hasGivenExp = false;
             updated = true;
         }
     });
@@ -369,6 +410,11 @@ function markQuestAsCompleted(questId) {
         } else {
             quest.status = 'completed';
             addGold(quest.reward);
+            
+            if (!quest.hasGivenExp) {
+                addExperience(quest.reward / 10);
+                quest.hasGivenExp = true;
+            }
             
             if (!quest.hasDamaged) {
                 const damage = calculateDamage(quest.priority);
@@ -840,7 +886,8 @@ questForm.addEventListener('submit', (e) => {
             timeLimit: timeLimit,
             priority: priority,
             hasDamaged: false,
-            hasPlayerDamaged: false
+            hasPlayerDamaged: false,
+            hasGivenExp: false
         };
 
         const questItem = document.createElement('div');
@@ -981,3 +1028,150 @@ function resetAllData() {
         location.reload();
     }
 }
+
+
+function updateShopButtons() {
+    const buyBtns = document.querySelectorAll('.buy-btn');
+    buyBtns.forEach(btn => {
+        const price = parseInt(btn.dataset.price);
+        if (playerData.gold < price) {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+        } else {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }
+    });
+}
+
+function initializeShop() {
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const categoryItems = document.querySelectorAll('.category-items');
+    
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const category = btn.dataset.category;
+            
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            categoryItems.forEach(item => item.classList.remove('active'));
+            
+            btn.classList.add('active');
+            document.querySelector(`.category-items.${category}`).classList.add('active');
+        });
+    });
+    
+    const buyBtns = document.querySelectorAll('.buy-btn');
+    buyBtns.forEach(btn => {
+        btn.addEventListener('click', handlePurchase);
+    });
+    
+    updateShopButtons();
+}
+
+function handlePurchase(event) {
+    const btn = event.target;
+    const itemType = btn.dataset.type;
+    const itemName = btn.dataset.item;
+    const price = parseInt(btn.dataset.price);
+    
+    if (playerData.gold < price) {
+        return;
+    }
+    
+    playerData.gold -= price;
+    updatePlayerInfo();
+    updateShopButtons();
+    savePlayerData();
+    
+    switch(itemType) {
+        case 'character':
+            purchaseCharacter(itemName);
+            break;
+        case 'potion':
+            purchasePotion(btn.dataset.heal);
+            break;
+        case 'boost':
+            purchaseBoost(btn.dataset.xp);
+            break;
+    }
+    
+    showNotification(`${itemName} purchased!`, 'purchase-notification');
+}
+
+function purchaseCharacter(characterName) {
+    playerData.class = characterName;
+    
+    const heroImg = document.querySelector('.hero img');
+    if (heroImg) {
+        heroImg.src = `./assets/characters/heroes/${characterName}/Idle/idle.gif`;
+    }
+    
+    const shopItems = document.querySelectorAll('.shop-item');
+    shopItems.forEach(item => {
+        const itemTitle = item.querySelector('h3');
+        if (itemTitle && itemTitle.textContent === characterName) {
+            item.classList.add('selected');
+        } else {
+            item.classList.remove('selected');
+        }
+    });
+}
+
+function purchasePotion(healAmount) {
+    if (healAmount === 'full') {
+        playerData.currentHealth = playerData.maxHealth;
+    } else {
+        const heal = parseInt(healAmount);
+        playerData.currentHealth = Math.min(playerData.maxHealth, playerData.currentHealth + heal);
+    }
+    
+    updatePlayerHealth();
+    savePlayerData();
+}
+
+function purchaseBoost(xpAmount) {
+    if (xpAmount === 'level') {
+        if (playerData.level < 10) {
+            playerData.level++;
+            playerData.experience = 0;
+            playerData.maxHealth += 20;
+            playerData.currentHealth = playerData.maxHealth;
+            
+            updatePlayerHealth();
+            updatePlayerExperience();
+            updatePlayerInfo();
+            savePlayerData();
+        }
+    } else {
+        const xp = parseInt(xpAmount);
+        addExperience(xp);
+    }
+}
+
+function showNotification(message, className) {
+    const existingNotifications = document.querySelectorAll('.purchase-notification, .insufficient-funds');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = className;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initializeShop();
+    
+    const shopItems = document.querySelectorAll('.shop-item');
+    shopItems.forEach(item => {
+        const itemTitle = item.querySelector('h3');
+        if (itemTitle && itemTitle.textContent === playerData.class) {
+            item.classList.add('selected');
+        }
+    });
+});

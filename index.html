@@ -109,7 +109,7 @@
             </div>
             <div class="player-name-text">
               <h1>Player</h1>
-              <span id="player-info">Necromancer - Level 1 - 0 Gold</span>
+              <span id="player-info">Necromancer - Level 1 - <img src="./assets/icons/coin.svg" alt="coin" class="player-coin"> 0</span>
             </div>
           </div>
           <div class="health">
@@ -159,41 +159,155 @@
       </div>
     </header>
     <main>
-      <section class="to-do-list">
-        <div class="quest-board">
-          <div class="quest-board-header">
-            <h2>Quest Board</h2>
-          </div>
-          <div class="quest-controls">
-            <div class="filter-controls">
-              <label for="status-filter">Filter by Status:</label>
-              <select id="status-filter">
-                <option value="all">All Quests</option>
-                <option value="active">Active Quests</option>
-                <option value="completed">Completed Quests</option>
-                <option value="failed">Failed Quests</option>
-              </select>
+      <div class="content-container">
+        <section class="to-do-list">
+          <div class="quest-board">
+            <div class="quest-board-header">
+              <h2>Quest Board</h2>
             </div>
-            <div class="sort-controls">
-              <label for="sort-by">Sort by:</label>
-              <select id="sort-by">
-                <option value="none">No Sorting</option>
-                <option value="priority">Priority</option>
-                <option value="time">Time Remaining</option>
-                <option value="reward">Reward</option>
-              </select>
+            <div class="quest-controls">
+              <div class="filter-controls">
+                <label for="status-filter">Filter by Status:</label>
+                <select id="status-filter">
+                  <option value="all">All Quests</option>
+                  <option value="active">Active Quests</option>
+                  <option value="completed">Completed Quests</option>
+                  <option value="failed">Failed Quests</option>
+                </select>
+              </div>
+              <div class="sort-controls">
+                <label for="sort-by">Sort by:</label>
+                <select id="sort-by">
+                  <option value="none">No Sorting</option>
+                  <option value="priority">Priority</option>
+                  <option value="time">Time Remaining</option>
+                  <option value="reward">Reward</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="quests">
-            <div class="empty-quests">
-              <p>No quests yet!</p>
-              <p>Click the button below to add a quest</p>
-              <button class="add-quest-btn"><img src="./assets/quill.gif" alt="add-quest"></button>
-            </div>
+            <div class="quests">
+              <div class="empty-quests">
+                <p>No quests yet!</p>
+                <p>Click the button below to add a quest</p>
+                <button class="add-quest-btn"><img src="./assets/quill.gif" alt="add-quest"></button>
+              </div>
 
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+        
+        <section class="shop-section">
+          <div class="shop-board">
+            <div class="shop-board-header">
+              <h2>Shop</h2>
+            </div>
+            <div class="shop-content">
+              <div class="shop-categories">
+                <button class="category-btn active" data-category="characters">Characters</button>
+                <button class="category-btn" data-category="potions">Potions</button>
+                <button class="category-btn" data-category="boosts">Boosts</button>
+              </div>
+              
+              <div class="shop-items">
+                <div class="category-items characters active">
+                  <div class="shop-item">
+                    <img src="./assets/characters/heroes/Knight/Idle/idle.gif" alt="Knight">
+                    <h3>Knight</h3>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 1200</p>
+                    <button class="buy-btn" data-item="Knight" data-price="1200" data-type="character">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/characters/heroes/Archer/Idle/idle.gif" alt="Archer">
+                    <h3>Archer</h3>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 1200</p>
+                    <button class="buy-btn" data-item="Archer" data-price="1200" data-type="character">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/characters/heroes/Paladin/Idle/idle.gif" alt="Paladin">
+                    <h3>Paladin</h3>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 1200</p>
+                    <button class="buy-btn" data-item="Paladin" data-price="1200" data-type="character">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/characters/heroes/Necromancer/Idle/idle.gif" alt="Necromancer">
+                    <h3>Necromancer</h3>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 1200</p>
+                    <button class="buy-btn" data-item="Necromancer" data-price="1200" data-type="character">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/characters/heroes/King/Idle/idle.gif" alt="King">
+                    <h3>King</h3>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 1200</p>
+                    <button class="buy-btn" data-item="King" data-price="1200" data-type="character">Buy</button>
+                  </div>
+                </div>
+
+                <div class="category-items potions">
+                  <div class="shop-item">
+                    <img src="./assets/icons/health.svg" alt="Small Health Potion">
+                    <h3>Small Health Potion</h3>
+                    <p class="description">+25 Health</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 300</p>
+                    <button class="buy-btn" data-item="small-potion" data-price="300" data-type="potion" data-heal="25">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/icons/health.svg" alt="Medium Health Potion">
+                    <h3>Medium Health Potion</h3>
+                    <p class="description">+50 Health</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 500</p>
+                    <button class="buy-btn" data-item="medium-potion" data-price="500" data-type="potion" data-heal="50">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/icons/health.svg" alt="Large Health Potion">
+                    <h3>Large Health Potion</h3>
+                    <p class="description">+75 Health</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 700</p>
+                    <button class="buy-btn" data-item="large-potion" data-price="700" data-type="potion" data-heal="75">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/icons/health.svg" alt="Full Health Potion">
+                    <h3>Full Health Potion</h3>
+                    <p class="description">Restore Full Health</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 1000</p>
+                    <button class="buy-btn" data-item="full-potion" data-price="1000" data-type="potion" data-heal="full">Buy</button>
+                  </div>
+                </div>
+
+                <div class="category-items boosts">
+                  <div class="shop-item">
+                    <img src="./assets/icons/exp.svg" alt="Small XP Boost">
+                    <h3>Small XP Boost</h3>
+                    <p class="description">+25 XP</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 200</p>
+                    <button class="buy-btn" data-item="small-xp" data-price="200" data-type="boost" data-xp="25">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/icons/exp.svg" alt="Medium XP Boost">
+                    <h3>Medium XP Boost</h3>
+                    <p class="description">+50 XP</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 350</p>
+                    <button class="buy-btn" data-item="medium-xp" data-price="350" data-type="boost" data-xp="50">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/icons/exp.svg" alt="Large XP Boost">
+                    <h3>Large XP Boost</h3>
+                    <p class="description">+75 XP</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 450</p>
+                    <button class="buy-btn" data-item="large-xp" data-price="450" data-type="boost" data-xp="75">Buy</button>
+                  </div>
+                  <div class="shop-item">
+                    <img src="./assets/icons/exp.svg" alt="Level Up Boost">
+                    <h3>Level Up</h3>
+                    <p class="description">Instant Level Up</p>
+                    <p class="price"><img src="./assets/icons/coin.svg" alt="coin"> 800</p>
+                    <button class="buy-btn" data-item="level-up" data-price="800" data-type="boost" data-xp="level">Buy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
 
     <button class="reset-btn" onclick="resetAllData()">RESET</button>
