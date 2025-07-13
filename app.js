@@ -6,8 +6,12 @@ const deleteModal = document.querySelector('#delete-modal');
 const cancelDeleteBtn = document.querySelector('#cancel-delete');
 const confirmDeleteBtn = document.querySelector('#confirm-delete');
 const modalCloseBtns = document.querySelectorAll('.modal-close-btn');
+const detailModal = document.querySelector('#detail-modal');
+const editQuestBtn = document.querySelector('#edit-quest-btn');
+const deleteQuestBtn = document.querySelector('#delete-quest-btn');
 let isEditMode = false;
 let currentEditQuestId = null;
+let currentDetailQuestId = null;
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -45,6 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             
+            questItem.addEventListener('click', (e) => {
+                if (!e.target.closest('.settings-quest-btn') && !e.target.closest('.delete-quest-btn')) {
+                    showQuestDetail(quest.id);
+                }
+            });
+            
             questList.appendChild(questItem);
         });
         
@@ -68,6 +78,31 @@ document.addEventListener('DOMContentLoaded', () => {
         
         questList.appendChild(addQuestCard);
     }
+    
+    // Modal dışına tıklama event listener'ları
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.close();
+            questForm.reset();
+            isEditMode = false;
+            currentEditQuestId = null;
+            document.querySelector('#quest-modal h2').textContent = 'Add Quest';
+            document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
+        }
+    });
+    
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.close();
+        }
+    });
+    
+    detailModal.addEventListener('click', (e) => {
+        if (e.target === detailModal) {
+            detailModal.close();
+            currentDetailQuestId = null;
+        }
+    });
 });
 
 addQuestBtn.addEventListener('click', () => {
@@ -90,6 +125,9 @@ modalCloseBtns.forEach(btn => {
             document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
         } else if (btn.closest('#delete-modal')) {
             deleteModal.close();
+        } else if (btn.closest('#detail-modal')) {
+            detailModal.close();
+            currentDetailQuestId = null;
         }
     });
 });
@@ -124,6 +162,19 @@ confirmDeleteBtn.addEventListener('click', () => {
     }
 });
 
+editQuestBtn.addEventListener('click', () => {
+    if (currentDetailQuestId) {
+        detailModal.close();
+        editQuest(currentDetailQuestId);
+    }
+});
+
+deleteQuestBtn.addEventListener('click', () => {
+    if (currentDetailQuestId) {
+        detailModal.close();
+        deleteQuest(currentDetailQuestId);
+    }
+});
 
 
 questForm.addEventListener('submit', (e) => {
@@ -210,6 +261,12 @@ questForm.addEventListener('submit', (e) => {
             </div>
         `;
 
+        questItem.addEventListener('click', (e) => {
+            if (!e.target.closest('.settings-quest-btn') && !e.target.closest('.delete-quest-btn')) {
+                showQuestDetail(quest.id);
+            }
+        });
+
         questList.appendChild(questItem);
         addQuestToStorage(quest);
         
@@ -256,5 +313,25 @@ function editQuest(questId) {
         }
         
         modal.showModal();
+    }
+}
+
+function showQuestDetail(questId) {
+    const quests = loadQuestsFromStorage();
+    const quest = quests.find(q => q.id === questId);
+    
+    if (quest) {
+        currentDetailQuestId = questId;
+        
+        document.querySelector('#detail-title').textContent = quest.title;
+        document.querySelector('#detail-description').textContent = quest.description || 'No description provided';
+        document.querySelector('#detail-reward').textContent = quest.reward;
+        document.querySelector('#detail-time-limit').textContent = quest.timeLimit;
+        
+        const prioritySpan = document.querySelector('#detail-priority');
+        prioritySpan.textContent = quest.priority.toUpperCase();
+        prioritySpan.className = `priority ${quest.priority}`;
+        
+        detailModal.showModal();
     }
 }

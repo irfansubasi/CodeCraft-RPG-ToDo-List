@@ -62,6 +62,42 @@
       </div>
     </dialog>
 
+    <dialog id="detail-modal">
+      <div class="detail-modal-content">
+        <button type="button" class="modal-close-btn">
+          <img src="./assets/icons/close.png" alt="close">
+        </button>
+        <div class="quest-detail-header">
+          <h2 id="detail-title"></h2>
+          <span id="detail-priority" class="priority"></span>
+        </div>
+        <div class="quest-detail-body">
+          <div class="detail-section">
+            <h3>Description</h3>
+            <p id="detail-description"></p>
+          </div>
+          <div class="detail-section">
+            <h3>Reward</h3>
+            <div class="reward">
+              <img src="./assets/icons/coin.svg" alt="gold" />
+              <span id="detail-reward"></span>
+            </div>
+          </div>
+          <div class="detail-section">
+            <h3>Time Limit</h3>
+            <div class="time-limit">
+              <img src="./assets/icons/clock.png" alt="clock">
+              <span id="detail-time-limit"></span>
+            </div>
+          </div>
+        </div>
+        <div class="detail-modal-actions">
+          <button type="button" class="edit-btn" id="edit-quest-btn">Edit Quest</button>
+          <button type="button" class="delete-btn" id="delete-quest-btn">Delete Quest</button>
+        </div>
+      </div>
+    </dialog>
+
 
 
     <header>
