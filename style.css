@@ -549,3 +549,23 @@ header{
     background-color: #d32f2f;
     border-color: #d32f2f;
 }
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.modal-close-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.modal-close-btn:hover {
+    transform: scale(1.2);
+}

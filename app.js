@@ -5,40 +5,49 @@ const questList = document.querySelector('.quests');
 const deleteModal = document.querySelector('#delete-modal');
 const cancelDeleteBtn = document.querySelector('#cancel-delete');
 const confirmDeleteBtn = document.querySelector('#confirm-delete');
+const modalCloseBtns = document.querySelectorAll('.modal-close-btn');
 let isEditMode = false;
 let currentEditQuestId = null;
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadQuestsFromStorage().forEach(quest => {
-        const questItem = document.createElement('div');
-        questItem.classList.add('quest-item');
-        questItem.dataset.questId = quest.id;
-        questItem.innerHTML = `
-            <button class="settings-quest-btn" onclick="editQuest(${quest.id})">
-                <img src="./assets/icons/settings.png" alt="settings">
-            </button>
-            <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
-                <img src="./assets/icons/close.png" alt="delete">
-            </button>
-            <h3>${quest.title}</h3>
-            <p>${quest.description}</p>
-            <div class="quest-details">
-            <span class="priority ${quest.priority}">${quest.priority.toUpperCase()}</span>
-            <div class="reward">
-                <img src="./assets/icons/coin.svg" alt="gold" />
-                <span>${quest.reward}</span>
-            </div>
-            <div class="time-limit">
-                <img src="./assets/icons/clock.png" alt="clock">
-                <span>${quest.timeLimit}</span>
-            </div>
-            </div>
-            
-        `;
+    const quests = loadQuestsFromStorage();
+    
+    if (quests.length > 0) {
+        const emptyQuests = document.querySelector('.empty-quests');
+        if (emptyQuests) {
+            emptyQuests.style.display = 'none';
+        }
         
-        questList.appendChild(questItem);
-    });
+        quests.forEach(quest => {
+            const questItem = document.createElement('div');
+            questItem.classList.add('quest-item');
+            questItem.dataset.questId = quest.id;
+            questItem.innerHTML = `
+                <button class="settings-quest-btn" onclick="editQuest(${quest.id})">
+                    <img src="./assets/icons/settings.png" alt="settings">
+                </button>
+                <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
+                    <img src="./assets/icons/close.png" alt="delete">
+                </button>
+                <h3>${quest.title}</h3>
+                <p>${quest.description}</p>
+                <div class="quest-details">
+                <span class="priority ${quest.priority}">${quest.priority.toUpperCase()}</span>
+                <div class="reward">
+                    <img src="./assets/icons/coin.svg" alt="gold" />
+                    <span>${quest.reward}</span>
+                </div>
+                <div class="time-limit">
+                    <img src="./assets/icons/clock.png" alt="clock">
+                    <span>${quest.timeLimit}</span>
+                </div>
+                </div>
+            `;
+            
+            questList.appendChild(questItem);
+        });
+    }
 });
 
 addQuestBtn.addEventListener('click', () => {
@@ -48,6 +57,21 @@ addQuestBtn.addEventListener('click', () => {
     document.querySelector('#quest-modal h2').textContent = 'Add Quest';
     document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
     modal.showModal();
+});
+
+modalCloseBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (btn.closest('#quest-modal')) {
+            modal.close();
+            questForm.reset();
+            isEditMode = false;
+            currentEditQuestId = null;
+            document.querySelector('#quest-modal h2').textContent = 'Add Quest';
+            document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
+        } else if (btn.closest('#delete-modal')) {
+            deleteModal.close();
+        }
+    });
 });
 
 
@@ -67,6 +91,14 @@ confirmDeleteBtn.addEventListener('click', () => {
                 element.remove();
             }
         });
+        
+        const remainingQuests = document.querySelectorAll('.quest-item');
+        if (remainingQuests.length === 0) {
+            const emptyQuests = document.querySelector('.empty-quests');
+            if (emptyQuests) {
+                emptyQuests.style.display = 'flex';
+            }
+        }
         
         deleteModal.close();
     }
@@ -160,6 +192,11 @@ questForm.addEventListener('submit', (e) => {
 
         questList.appendChild(questItem);
         addQuestToStorage(quest);
+        
+        const emptyQuests = document.querySelector('.empty-quests');
+        if (emptyQuests) {
+            emptyQuests.style.display = 'none';
+        }
     }
     
     questForm.reset();
