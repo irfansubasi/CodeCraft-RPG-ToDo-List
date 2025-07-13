@@ -13,7 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
         questItem.classList.add('quest-item');
         questItem.dataset.questId = quest.id;
         questItem.innerHTML = `
-            <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">&times;</button>
+            <button class="settings-quest-btn">
+                <img src="./assets/icons/settings.png" alt="settings">
+            </button>
+            <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
+                <img src="./assets/icons/close.png" alt="delete">
+            </button>
             <h3>${quest.title}</h3>
             <p>${quest.description}</p>
             <div class="quest-details">
@@ -81,9 +86,14 @@ questForm.addEventListener('submit', (e) => {
     const questItem = document.createElement('div');
     questItem.classList.add('quest-item');
     questItem.dataset.questId = quest.id;
-            questItem.innerHTML = `
-            <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">&times;</button>
-            <h3>${title}</h3>
+                questItem.innerHTML = `
+        <button class="settings-quest-btn">
+            <img src="./assets/icons/settings.png" alt="settings">
+        </button>
+        <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
+            <img src="./assets/icons/close.png" alt="delete">
+        </button>
+        <h3>${title}</h3>
             <p>${description}</p>
             <div class="quest-details">
             <span class="priority ${priority}">${priority.toUpperCase()}</span>
