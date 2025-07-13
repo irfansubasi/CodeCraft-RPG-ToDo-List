@@ -5,6 +5,8 @@ const questList = document.querySelector('.quests');
 const deleteModal = document.querySelector('#delete-modal');
 const cancelDeleteBtn = document.querySelector('#cancel-delete');
 const confirmDeleteBtn = document.querySelector('#confirm-delete');
+let isEditMode = false;
+let currentEditQuestId = null;
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         questItem.classList.add('quest-item');
         questItem.dataset.questId = quest.id;
         questItem.innerHTML = `
-            <button class="settings-quest-btn">
+            <button class="settings-quest-btn" onclick="editQuest(${quest.id})">
                 <img src="./assets/icons/settings.png" alt="settings">
             </button>
             <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
@@ -40,6 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 addQuestBtn.addEventListener('click', () => {
+    isEditMode = false;
+    currentEditQuestId = null;
+    questForm.reset();
+    document.querySelector('#quest-modal h2').textContent = 'Add Quest';
+    document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
     modal.showModal();
 });
 
@@ -65,6 +72,8 @@ confirmDeleteBtn.addEventListener('click', () => {
     }
 });
 
+
+
 questForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -74,26 +83,67 @@ questForm.addEventListener('submit', (e) => {
     const timeLimit = document.querySelector('#quest-time-limit').value;
     const priority = document.querySelector('input[name="quest-priority"]:checked').value;
 
-    const quest = {
-        id: Date.now(),
-        title: title,
-        description: description,
-        reward: reward,
-        timeLimit: timeLimit,
-        priority: priority
-    };
+    if (isEditMode && currentEditQuestId) {
+        const updatedQuest = {
+            title: title,
+            description: description,
+            reward: reward,
+            timeLimit: timeLimit,
+            priority: priority
+        };
+        
+        updateQuestInStorage(currentEditQuestId, updatedQuest);
+        
+        const questElement = document.querySelector(`[data-quest-id="${currentEditQuestId}"]`);
+        if (questElement) {
+            questElement.innerHTML = `
+                <button class="settings-quest-btn" onclick="editQuest(${currentEditQuestId})">
+                    <img src="./assets/icons/settings.png" alt="settings">
+                </button>
+                <button class="delete-quest-btn" onclick="deleteQuest(${currentEditQuestId})">
+                    <img src="./assets/icons/close.png" alt="delete">
+                </button>
+                <h3>${title}</h3>
+                <p>${description}</p>
+                <div class="quest-details">
+                <span class="priority ${priority}">${priority.toUpperCase()}</span>
+                <div class="reward">
+                    <img src="./assets/icons/coin.svg" alt="gold" />
+                    <span>${reward}</span>
+                </div>
+                <div class="time-limit">
+                    <img src="./assets/icons/clock.png" alt="clock">
+                    <span>${timeLimit}</span>
+                </div>
+                </div>
+            `;
+        }
+        
+        isEditMode = false;
+        currentEditQuestId = null;
+        document.querySelector('#quest-modal h2').textContent = 'Add Quest';
+        document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
+    } else {
+        const quest = {
+            id: Date.now(),
+            title: title,
+            description: description,
+            reward: reward,
+            timeLimit: timeLimit,
+            priority: priority
+        };
 
-    const questItem = document.createElement('div');
-    questItem.classList.add('quest-item');
-    questItem.dataset.questId = quest.id;
-                questItem.innerHTML = `
-        <button class="settings-quest-btn">
-            <img src="./assets/icons/settings.png" alt="settings">
-        </button>
-        <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
-            <img src="./assets/icons/close.png" alt="delete">
-        </button>
-        <h3>${title}</h3>
+        const questItem = document.createElement('div');
+        questItem.classList.add('quest-item');
+        questItem.dataset.questId = quest.id;
+        questItem.innerHTML = `
+            <button class="settings-quest-btn" onclick="editQuest(${quest.id})">
+                <img src="./assets/icons/settings.png" alt="settings">
+            </button>
+            <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
+                <img src="./assets/icons/close.png" alt="delete">
+            </button>
+            <h3>${title}</h3>
             <p>${description}</p>
             <div class="quest-details">
             <span class="priority ${priority}">${priority.toUpperCase()}</span>
@@ -106,12 +156,11 @@ questForm.addEventListener('submit', (e) => {
                 <span>${timeLimit}</span>
             </div>
             </div>
-            
         `;
 
-    questList.appendChild(questItem);
-    
-    addQuestToStorage(quest);
+        questList.appendChild(questItem);
+        addQuestToStorage(quest);
+    }
     
     questForm.reset();
     modal.close();
@@ -121,4 +170,29 @@ function deleteQuest(questId) {
     deleteModal.dataset.questId = questId;
     
     deleteModal.showModal();
+}
+
+function editQuest(questId) {
+    const quests = loadQuestsFromStorage();
+    const quest = quests.find(q => q.id === questId);
+    
+    if (quest) {
+        isEditMode = true;
+        currentEditQuestId = questId;
+        
+        document.querySelector('#quest-modal h2').textContent = 'Edit Quest';
+        document.querySelector('#quest-modal .confirm-btn').textContent = 'Update Quest';
+        
+        document.querySelector('#quest-title').value = quest.title;
+        document.querySelector('#quest-description').value = quest.description || '';
+        document.querySelector('#quest-reward').value = quest.reward || '';
+        document.querySelector('#quest-time-limit').value = quest.timeLimit;
+        
+        const priorityRadio = document.querySelector(`input[name="quest-priority"][value="${quest.priority}"]`);
+        if (priorityRadio) {
+            priorityRadio.checked = true;
+        }
+        
+        modal.showModal();
+    }
 }
