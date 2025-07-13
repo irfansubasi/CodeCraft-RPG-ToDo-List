@@ -47,6 +47,26 @@ document.addEventListener('DOMContentLoaded', () => {
             
             questList.appendChild(questItem);
         });
+        
+        const addQuestCard = document.createElement('div');
+        addQuestCard.classList.add('quest-item', 'add-quest-card');
+        addQuestCard.innerHTML = `
+            <div class="add-quest-content">
+                <img src="./assets/quill.gif" alt="add-quest">
+                <h3>Add Quest</h3>
+            </div>
+        `;
+        
+        addQuestCard.addEventListener('click', () => {
+            isEditMode = false;
+            currentEditQuestId = null;
+            questForm.reset();
+            document.querySelector('#quest-modal h2').textContent = 'Add Quest';
+            document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
+            modal.showModal();
+        });
+        
+        questList.appendChild(addQuestCard);
     }
 });
 
@@ -196,6 +216,11 @@ questForm.addEventListener('submit', (e) => {
         const emptyQuests = document.querySelector('.empty-quests');
         if (emptyQuests) {
             emptyQuests.style.display = 'none';
+        }
+        
+        const addQuestCard = document.querySelector('.add-quest-card');
+        if (addQuestCard) {
+            questList.appendChild(addQuestCard);
         }
     }
     
