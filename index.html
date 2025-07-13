@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <title>CodeCraft RPG ToDo List</title>
   </head>
   <body>
 
@@ -37,7 +38,7 @@
             <input type="radio" id="high-priority" name="quest-priority" value="high" required>
             <label for="high-priority" class="priority high">High</label>
             
-            <input type="radio" id="medium-priority" name="quest-priority" value="medium">
+            <input type="radio" id="medium-priority" name="quest-priority" value="medium" checked>
             <label for="medium-priority" class="priority medium">Medium</label>
             
             <input type="radio" id="low-priority" name="quest-priority" value="low">
@@ -59,6 +60,60 @@
           <button type="button" class="cancel-btn" id="cancel-delete">Cancel</button>
           <button type="button" class="confirm-delete-btn" id="confirm-delete">Delete</button>
         </div>
+      </div>
+    </dialog>
+
+    <dialog id="setup-modal">
+      <div class="setup-modal-content">
+        <h2>Welcome to CodeCraft To-Do RPG!</h2>
+        <p>Let's set up your character</p>
+        <form id="setup-form">
+          <div class="form-group">
+            <label for="player-name">Your Name <span>*</span></label>
+            <input type="text" id="player-name" name="player-name" required placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label>Choose Your Character <span>*</span></label>
+            <div class="character-selection">
+              <div class="character-option">
+                <input type="radio" id="knight-char" name="character-class" value="Knight" required>
+                <label for="knight-char">
+                  <img src="./assets/characters/heroes/Knight/Idle/idle.gif" alt="Knight">
+                  <span>Knight</span>
+                </label>
+              </div>
+              <div class="character-option">
+                <input type="radio" id="archer-char" name="character-class" value="Archer">
+                <label for="archer-char">
+                  <img src="./assets/characters/heroes/Archer/Idle/idle.gif" alt="Archer">
+                  <span>Archer</span>
+                </label>
+              </div>
+              <div class="character-option">
+                <input type="radio" id="paladin-char" name="character-class" value="Paladin">
+                <label for="paladin-char">
+                  <img src="./assets/characters/heroes/Paladin/Idle/idle.gif" alt="Paladin">
+                  <span>Paladin</span>
+                </label>
+              </div>
+              <div class="character-option">
+                <input type="radio" id="necromancer-char" name="character-class" value="Necromancer">
+                <label for="necromancer-char">
+                  <img src="./assets/characters/heroes/Necromancer/Idle/idle.gif" alt="Necromancer">
+                  <span>Necromancer</span>
+                </label>
+              </div>
+              <div class="character-option">
+                <input type="radio" id="king-char" name="character-class" value="King">
+                <label for="king-char">
+                  <img src="./assets/characters/heroes/King/Idle/idle.gif" alt="King">
+                  <span>King</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="confirm-btn">Start Adventure!</button>
+        </form>
       </div>
     </dialog>
 
@@ -145,7 +200,7 @@
         </div>
         <div class="stats enemy-stats">
           <div class="enemy-name">
-            <h1>Enemy</h1>
+            <h1 id="enemy-name">Worm</h1>
           </div>
           <div class="health">
             <div class="health-icon">
@@ -310,7 +365,56 @@
       </div>
     </main>
 
+    <button class="sound-btn" onclick="toggleSound()">🔊</button>
+    <button class="help-btn" onclick="showHelpModal()">?</button>
     <button class="reset-btn" onclick="resetAllData()">RESET</button>
+    
+    <dialog id="help-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>How to Play</h2>
+          <button class="modal-close-btn" onclick="closeHelpModal()"><img src="./assets/icons/close.png" alt="close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="help-section">
+            <h3>About This System</h3>
+            <p>This RPG-themed To-Do List was designed for <b>Insider's CodeCraft Bootcamp</b> to make completing daily tasks more engaging and fun. Instead of a boring checklist, your tasks become quests in an adventure game where you battle enemies, earn rewards, and level up your character.</p>
+          </div>
+          
+          <div class="help-section">
+            <h3>Quest System</h3>
+            <p>• Add quests with different priorities (High, Medium, Low)</p>
+            <p>• Complete quests to earn gold and experience</p>
+            <p>• Failed quests damage your health</p>
+            <p>• Quests have time limits - complete them before they expire!</p>
+          </div>
+          
+          <div class="help-section">
+            <h3>Battle System</h3>
+            <p>• High priority quests deal more damage to enemy</p>
+            <p>• Failed quests damage your health</p>
+            <p>• Defeat enemies to earn gold rewards</p>
+            <p>• Level up to increase your power!</p>
+          </div>
+          
+          <div class="help-section">
+            <h3>Shop System</h3>
+            <p>• Buy new characters with different abilities</p>
+            <p>• Purchase health potions to restore health</p>
+            <p>• Buy XP boosts to level up faster</p>
+            <p>• Current character cannot be purchased again</p>
+          </div>
+          
+          <div class="help-section">
+            <h3>Stats & Progress</h3>
+            <p>• Health: Your survival depends on it</p>
+            <p>• Experience: Level up to become stronger</p>
+            <p>• Gold: Currency for shop purchases</p>
+            <p>• Level: Increases damage and health</p>
+          </div>
+        </div>
+      </div>
+    </dialog>
     
     <script src="storage.js"></script>
     <script src="app.js"></script>

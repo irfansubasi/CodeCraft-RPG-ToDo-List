@@ -7,8 +7,9 @@
 }
 
 body {
-    
     font-family: 'Caudex', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -165,10 +166,11 @@ header{
     background-repeat: no-repeat;
     width: 100%;
     height: 250px;
+    border: 3px solid #000;
 }
 
 .battle-area img {
-    margin-top: 100px;
+    margin-top: 50px;
     width: 250px;
     height: 250px;
     object-fit: contain;
@@ -187,6 +189,8 @@ header{
     background: linear-gradient(135deg, #8B4513 0%, #654321 50%, #8B4513 100%);
     color: #fff;
     gap: 10px;
+    border-top: 3px solid #000;
+    border-bottom: 3px solid #000;
 }
 
 .stats .player-name {
@@ -271,6 +275,9 @@ header{
     margin: 0 auto;
     padding: 0 20px;
     width: 100%;
+    display: flex;
+    gap: 20px;
+    overflow-x: hidden;
 }
 
 .to-do-list {
@@ -331,9 +338,10 @@ header{
 .quests {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    row-gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
 }
 
 .quest-board {
@@ -417,6 +425,7 @@ header{
     height: auto;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
     margin-bottom: 50px;
+    flex-shrink: 0;
 }
 
 .quest-item.completed {
@@ -964,12 +973,12 @@ header{
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #ff4444;
-    color: white;
-    border: none;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
+    background: linear-gradient(135deg, #8B4513 0%, #654321 50%, #8B4513 100%);
+    color: #fff;
+    border: 3px solid #000;
     font-size: 12px;
     font-weight: bold;
     cursor: pointer;
@@ -979,7 +988,6 @@ header{
 }
 
 .reset-btn:hover {
-    background-color: #cc0000;
     transform: scale(1.1);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
@@ -1243,3 +1251,967 @@ header{
     filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
 }
 
+
+@media (min-width: 1200px) {
+    .content-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .to-do-list, .shop-section {
+        width: 100%;
+    }
+    
+    .battle-container {
+        grid-template-columns: 1fr 3fr 1fr;
+    }
+    
+    .battle-area img {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+
+@media (max-width: 1199px) and (min-width: 768px) {
+    .content-container {
+        padding: 20px;
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    .to-do-list, .shop-section {
+        width: 100%;
+    }
+    
+    .battle-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    
+    .battle-area {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        height: 200px;
+    }
+
+    .stats {
+        border-bottom: none;
+        border-right: 1.5px solid #000;
+        border-left: 1.5px solid #000;
+    }
+    
+    .player-stats {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    .enemy-stats {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .battle-area img {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .shop-categories {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .category-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+
+@media (max-width: 767px) and (min-width: 481px) {
+    .battle-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    
+    .battle-area {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        height: 200px;
+    }
+    
+    .player-stats {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    .enemy-stats {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .battle-area img {
+        width: 150px;
+        height: 150px;
+        margin-top: 50px;
+    }
+    
+    .stats {
+        padding: 15px;
+        gap: 8px;
+    }
+    
+    .stats .player-name {
+        gap: 15px;
+    }
+    
+    .content-container {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .to-do-list, .shop-section {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .quest-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filter-controls, .sort-controls {
+        width: 100%;
+    }
+    
+    .quests {
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .quest-item {
+        width: 300px;
+        margin-bottom: 40px;
+    }
+    
+    .shop-categories {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .category-btn {
+        width: 100%;
+        padding: 12px;
+    }
+    
+    .category-items {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .shop-item {
+        padding: 20px;
+        gap: 12px;
+    }
+    
+    .shop-item img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    #quest-modal {
+        max-width: 90%;
+        padding: 30px;
+    }
+    
+    #quest-form {
+        padding: 15px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 8px;
+    }
+    
+    .radio-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .radio-group label {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .battle-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    
+    .battle-area {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        height: 150px;
+    }
+    
+    .player-stats {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    .enemy-stats {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .battle-area img {
+        width: 120px;
+        height: 120px;
+        margin-top: 30px;
+    }
+    
+    .stats {
+        padding: 8px;
+        gap: 5px;
+    }
+    
+    .stats .player-name {
+        gap: 8px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .player-name-text h1,
+    .enemy-name h1 {
+        font-size: 1.1rem;
+    }
+    
+    .content-container {
+        padding: 10px;
+        flex-direction: column;
+    }
+    
+    .to-do-list, .shop-section {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .quest-board-header h2,
+    .shop-board-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .quest-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .filter-controls, .sort-controls {
+        width: 100%;
+    }
+    
+    .filter-controls select, .sort-controls select {
+        width: 100%;
+        padding: 8px;
+    }
+    
+    .quest-item {
+        padding: 15px;
+        margin-bottom: 40px;
+        width: 100%;
+        max-width: 350px;
+    }
+    
+    .quest-item h3 {
+        font-size: 0.9rem;
+    }
+    
+    .quest-item p {
+        font-size: 0.7rem;
+    }
+    
+    .quest-details {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .priority {
+        font-size: 0.7rem !important;
+        padding: 3px 8px;
+    }
+    
+    .reward, .time-limit {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+    }
+    
+    .reward img, .time-limit img {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .quest-actions {
+        height: 35px;
+        bottom: -38px;
+    }
+    
+    .complete-btn, .fail-btn {
+        font-size: 0.8rem;
+    }
+    
+    .shop-categories {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .category-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .category-items {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .shop-item {
+        padding: 15px;
+        gap: 10px;
+    }
+    
+    .shop-item img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .shop-item h3 {
+        font-size: 1.1rem;
+    }
+    
+    .shop-item .description {
+        font-size: 0.8rem;
+    }
+    
+    .shop-item .price {
+        font-size: 1rem;
+        padding: 6px 12px;
+    }
+    
+    .shop-item .price img {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .buy-btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        max-width: 120px;
+    }
+    
+    #quest-modal {
+        max-width: 95%;
+        padding: 20px;
+    }
+    
+    #quest-modal h2 {
+        font-size: 1.3rem;
+    }
+    
+    #quest-form {
+        padding: 10px;
+        gap: 8px;
+    }
+    
+    .form-group label {
+        font-size: 1rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 6px;
+        font-size: 0.9rem;
+    }
+    
+    .radio-group {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .radio-group label {
+        width: 100%;
+        text-align: center;
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .confirm-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    
+    #detail-modal {
+        max-width: 95%;
+        padding: 20px;
+    }
+    
+    .detail-modal-content {
+        gap: 15px;
+    }
+    
+    .quest-detail-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .detail-section h3 {
+        font-size: 1rem;
+    }
+    
+    .detail-section p {
+        font-size: 0.9rem;
+    }
+    
+    .detail-modal-actions {
+        gap: 10px;
+    }
+    
+    .edit-btn, .delete-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    
+    #delete-modal {
+        max-width: 90%;
+    }
+    
+    .delete-modal-content {
+        padding: 15px;
+    }
+    
+    .delete-modal-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .delete-modal-content p {
+        font-size: 0.9rem;
+    }
+    
+    .delete-modal-actions {
+        gap: 10px;
+    }
+    
+    .cancel-btn, .confirm-delete-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .modal-close-btn {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .modal-close-btn img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .reset-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 9px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .purchase-notification {
+        top: 10px;
+        right: 10px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    #player-info {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+        gap: 6px;
+    }
+    
+    .player-coin {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+
+@media (max-width: 319px) {
+    .battle-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    
+    .battle-area {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        height: 120px;
+    }
+    
+    .player-stats {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    
+    .enemy-stats {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .battle-area img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .stats {
+        padding: 6px;
+    }
+    
+    .content-container {
+        padding: 8px;
+    }
+    
+    .quest-item {
+        padding: 12px;
+    }
+    
+    .shop-item {
+        padding: 12px;
+    }
+    
+    #quest-modal {
+        padding: 15px;
+    }
+    
+    #quest-form {
+        padding: 8px;
+    }
+    
+    .form-group label {
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 5px;
+        font-size: 0.8rem;
+    }
+    
+    .radio-group label {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+    
+    .confirm-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+
+#setup-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4e4bc;
+    border: 5px solid #8B4513;
+    border-radius: 15px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow-y: auto;
+}
+
+#setup-modal::backdrop {
+    backdrop-filter: blur(50px);
+}
+
+.setup-modal-content {
+    width: 100%;
+    text-align: center;
+}
+
+.setup-modal-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #8B4513;
+    margin-bottom: 10px;
+}
+
+.setup-modal-content p {
+    font-size: 1.1rem;
+    color: #654321;
+    margin-bottom: 30px;
+}
+
+.character-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.character-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.character-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.character-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    border: 3px solid #8B4513;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #f4e4bc 0%, #e8d4a8 100%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    color: #8B4513;
+    text-align: center;
+    height: 140px;
+    width: 100%;
+}
+
+.character-option label:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+    border-color: #8b6b2f;
+}
+
+.character-option input[type="radio"]:checked + label {
+    background: linear-gradient(145deg, #8B4513 0%, #a0522d 100%);
+    color: #fff;
+    border-color: #654321;
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(139, 69, 19, 0.5);
+}
+
+.character-option img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+.character-option span {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+
+@media (max-width: 767px) {
+    #setup-modal {
+        max-width: 95%;
+        padding: 30px 20px;
+    }
+    
+    .setup-modal-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .setup-modal-content p {
+        font-size: 1rem;
+    }
+    
+    .character-selection {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .character-option {
+        width: 100%;
+    }
+    
+    .character-option label {
+        padding: 10px;
+        width: 100%;
+        height: 140px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .character-option img {
+        width: 80px;
+        height: 80px;
+        flex-shrink: 0;
+    }
+    
+    .character-option span {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    #setup-modal {
+        padding: 20px 15px;
+    }
+    
+    .setup-modal-content h2 {
+        font-size: 1.3rem;
+    }
+    
+    .setup-modal-content p {
+        font-size: 0.9rem;
+    }
+    
+    .character-selection {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+    }
+    
+    .character-option {
+        width: 100%;
+    }
+    
+    .character-option label {
+        padding: 8px;
+        width: 100%;
+        height: 120px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .character-option img {
+        width: 70px;
+        height: 70px;
+        flex-shrink: 0;
+    }
+    
+    .character-option span {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+}
+
+.help-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B4513 0%, #654321 50%, #8B4513 100%);
+    color: #fff;
+    border: 3px solid #000;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.help-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+#help-modal {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4e4bc;
+    border: 5px solid #8B4513;
+    border-radius: 10px;
+    padding: 30px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+}
+
+#help-modal::backdrop {
+    backdrop-filter: blur(50px);
+}
+
+#help-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #8B4513;
+    padding-bottom: 10px;
+}
+
+#help-modal .modal-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #8B4513;
+    margin: 0;
+}
+
+#help-modal .modal-body {
+    width: 100%;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.help-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(139, 69, 19, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #8B4513;
+}
+
+.help-section h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #8B4513;
+    margin-bottom: 10px;
+}
+
+.help-section p {
+    font-size: 1rem;
+    color: #654321;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+@media (max-width: 767px) {
+    .help-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+        bottom: 70px;
+        right: 15px;
+    }
+    
+    #help-modal {
+        max-width: 90%;
+        padding: 20px;
+    }
+    
+    #help-modal .modal-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .help-section h3 {
+        font-size: 1.2rem;
+    }
+    
+    .help-section p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .help-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        bottom: 65px;
+        right: 10px;
+    }
+    
+    #help-modal {
+        max-width: 95%;
+        padding: 15px;
+    }
+    
+    #help-modal .modal-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .help-section {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .help-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .help-section p {
+        font-size: 0.85rem;
+    }
+}
+
+.sound-btn {
+    position: fixed;
+    bottom: 140px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B4513 0%, #654321 50%, #8B4513 100%);
+    color: #fff;
+    border: 3px solid #000;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sound-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.sound-btn.muted {
+    opacity: 0.5;
+}
+
+@media (max-width: 767px) {
+    .sound-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+        bottom: 130px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sound-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        bottom: 120px;
+        right: 10px;
+    }
+}
