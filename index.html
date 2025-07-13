@@ -164,6 +164,26 @@
           <div class="quest-board-header">
             <h2>Quest Board</h2>
           </div>
+          <div class="quest-controls">
+            <div class="filter-controls">
+              <label for="status-filter">Filter by Status:</label>
+              <select id="status-filter">
+                <option value="all">All Quests</option>
+                <option value="active">Active Quests</option>
+                <option value="completed">Completed Quests</option>
+                <option value="failed">Failed Quests</option>
+              </select>
+            </div>
+            <div class="sort-controls">
+              <label for="sort-by">Sort by:</label>
+              <select id="sort-by">
+                <option value="none">No Sorting</option>
+                <option value="priority">Priority</option>
+                <option value="time">Time Remaining</option>
+                <option value="reward">Reward</option>
+              </select>
+            </div>
+          </div>
           <div class="quests">
             <div class="empty-quests">
               <p>No quests yet!</p>

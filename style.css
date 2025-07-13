@@ -300,21 +300,75 @@ header{
     padding: 0 30px;
 }
 
+.quest-controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background-color: #8B4513;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-controls, .sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-controls label, .sort-controls label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: #fff;
+}
+
+.filter-controls select, .sort-controls select {
+    font-family: 'Caudex', serif;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #8B4513;
+    cursor: pointer;
+    outline: none;
+}
+
+.filter-controls select:focus, .sort-controls select:focus {
+    border-color: #f4e4bc;
+}
+
 .quest-item {
+    background-color: #f4e4bc;
+    border: 3px solid #8B4513;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 10px;
-    border: 3px solid #8b6b2f;
-    border-radius: 0;
-    padding: 20px;
-    background-color: #f4e4bc;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
     width: 350px;
     min-height: 180px;
     height: auto;
-    position: relative;
-    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.quest-item.completed {
+    background-color: #d4edda;
+    border-color: #28a745;
+    opacity: 0.7;
+}
+
+.quest-item.failed {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    opacity: 0.7;
 }
 
 .quest-item:hover {
@@ -322,8 +376,9 @@ header{
     background-color: #f4e4bc;
     border-color: #8b6b2f;
     cursor: pointer;
-    
 }
+
+
 
 .quest-item h3 {
     font-size: 1rem;
@@ -341,7 +396,7 @@ header{
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
-    min-height: 2.4em; /* 2 satır için minimum yükseklik */
+    min-height: 2.4em;
     line-height: 1.2em;
 }
 
@@ -482,6 +537,60 @@ header{
     transform: scale(1.2);
 }
 
+.complete-btn {
+    position: absolute;
+    top: 10px;
+    right: 120px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Caudex', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.complete-btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.complete-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.fail-btn {
+    position: absolute;
+    top: 10px;
+    right: 70px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Caudex', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.fail-btn:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.fail-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 
 #delete-modal {
     position: fixed;
@@ -575,6 +684,7 @@ header{
     gap: 15px;
     justify-content: center;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 .edit-btn, .delete-btn {
@@ -605,6 +715,8 @@ header{
 .delete-btn:hover {
     background-color: #c82333;
 }
+
+
 
 .delete-modal-content {
     padding: 20px;
