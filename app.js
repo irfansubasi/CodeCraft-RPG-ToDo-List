@@ -13,6 +13,210 @@ let isEditMode = false;
 let currentEditQuestId = null;
 let currentDetailQuestId = null;
 
+let playerData = {
+    class: 'Necromancer',
+    level: 1,
+    gold: 0,
+    maxHealth: 100,
+    currentHealth: 100
+};
+
+let enemyData = {
+    name: 'Enemy',
+    maxHealth: 100,
+    currentHealth: 100
+};
+
+function updateEnemyHealth() {
+    const enemyHealthFill = document.querySelector('.enemy-stats .health-fill');
+    if (enemyHealthFill) {
+        const healthPercentage = (enemyData.currentHealth / enemyData.maxHealth) * 100;
+        enemyHealthFill.style.width = `${healthPercentage}%`;
+        enemyHealthFill.textContent = `${enemyData.currentHealth}/${enemyData.maxHealth}`;
+    }
+}
+
+function damageEnemy(damage) {
+    enemyData.currentHealth = Math.max(0, enemyData.currentHealth - damage);
+    updateEnemyHealth();
+    saveEnemyData();
+    
+    if (enemyData.currentHealth <= 0) {
+        enemyDefeated();
+    }
+}
+
+function enemyDefeated() {
+    addGold(50);
+    enemyData.currentHealth = enemyData.maxHealth;
+    updateEnemyHealth();
+    saveEnemyData();
+}
+
+function calculateDamage(priority) {
+    switch(priority) {
+        case 'high':
+            return 20;
+        case 'medium':
+            return 15;
+        case 'low':
+            return 8;
+        default:
+            return 12;
+    }
+}
+
+function calculatePlayerDamage(priority) {
+    switch(priority) {
+        case 'high':
+            return 15;
+        case 'medium':
+            return 10;
+        case 'low':
+            return 5;
+        default:
+            return 8;
+    }
+}
+
+function updatePlayerInfo() {
+    const playerInfo = document.querySelector('#player-info');
+    if (playerInfo) {
+        playerInfo.textContent = `${playerData.class} - Level ${playerData.level} - ${playerData.gold} Gold`;
+    }
+}
+
+function updatePlayerHealth() {
+    const playerHealthFill = document.querySelector('.player-stats .health-fill');
+    if (playerHealthFill && playerData.currentHealth !== undefined && playerData.maxHealth !== undefined) {
+        const healthPercentage = (playerData.currentHealth / playerData.maxHealth) * 100;
+        playerHealthFill.style.width = `${healthPercentage}%`;
+        playerHealthFill.textContent = `${playerData.currentHealth}/${playerData.maxHealth}`;
+    }
+}
+
+function damagePlayer(damage) {
+    playerData.currentHealth = Math.max(0, playerData.currentHealth - damage);
+    updatePlayerHealth();
+    updatePlayerInfo();
+    savePlayerData();
+    
+    if (playerData.currentHealth <= 0) {
+        playerDefeated();
+        playDeathAnimation();
+    }
+}
+
+function playerDefeated() {
+    playerData.currentHealth = playerData.maxHealth;
+    updatePlayerHealth();
+    updatePlayerInfo();
+    savePlayerData();
+}
+
+function playHeroAnimation(animationType) {
+    const heroImg = document.querySelector('.hero img');
+    if (heroImg) {
+        const currentClass = playerData.class;
+        let animationPath = '';
+        
+        switch(animationType) {
+            case 'attack':
+                animationPath = `./assets/characters/heroes/${currentClass}/Attack/attack.gif`;
+                break;
+            case 'death':
+                animationPath = `./assets/characters/heroes/${currentClass}/Death/death.gif`;
+                break;
+            case 'idle':
+                animationPath = `./assets/characters/heroes/${currentClass}/Idle/idle.gif`;
+                break;
+        }
+        
+        if (animationPath) {
+            heroImg.src = animationPath;
+        }
+    }
+}
+
+function playAttackAnimation() {
+    playHeroAnimation('attack');
+    setTimeout(() => {
+        playHeroAnimation('idle');
+    }, 7000);
+}
+
+function playDeathAnimation() {
+    playHeroAnimation('death');
+    setTimeout(() => {
+        playHeroAnimation('idle');
+    }, 7000);
+}
+
+function addGold(amount) {
+    playerData.gold += amount;
+    updatePlayerInfo();
+}
+
+function loadPlayerData() {
+    const savedData = localStorage.getItem('playerData');
+    if (savedData) {
+        const loadedData = JSON.parse(savedData);
+        playerData = {
+            class: loadedData.class || 'Necromancer',
+            level: loadedData.level || 1,
+            gold: loadedData.gold || 0,
+            maxHealth: loadedData.maxHealth || 100,
+            currentHealth: loadedData.currentHealth || 100
+        };
+    } else {
+        playerData = {
+            class: 'Necromancer',
+            level: 1,
+            gold: 0,
+            maxHealth: 100,
+            currentHealth: 100
+        };
+    }
+    updatePlayerInfo();
+    updatePlayerHealth();
+}
+
+function updateOldQuests() {
+    const quests = loadQuestsFromStorage();
+    let updated = false;
+    
+    quests.forEach(quest => {
+        if (quest.hasPlayerDamaged === undefined) {
+            quest.hasPlayerDamaged = false;
+            updated = true;
+        }
+        if (quest.hasDamaged === undefined) {
+            quest.hasDamaged = false;
+            updated = true;
+        }
+    });
+    
+    if (updated) {
+        saveQuestsToStorage(quests);
+    }
+}
+
+function savePlayerData() {
+    localStorage.setItem('playerData', JSON.stringify(playerData));
+}
+
+function loadEnemyData() {
+    const savedData = localStorage.getItem('enemyData');
+    if (savedData) {
+        enemyData = JSON.parse(savedData);
+    }
+    updateEnemyHealth();
+}
+
+function saveEnemyData() {
+    localStorage.setItem('enemyData', JSON.stringify(enemyData));
+}
+
 function filterAndSortQuests() {
     const statusFilter = document.querySelector('#status-filter').value;
     const sortBy = document.querySelector('#sort-by').value;
@@ -95,12 +299,6 @@ function displayQuests(quests) {
                 <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
                     <img src="./assets/icons/close.png" alt="delete">
                 </button>
-                <button class="complete-btn" onclick="markQuestAsCompleted(${quest.id})">
-                    Complete
-                </button>
-                <button class="fail-btn" onclick="markQuestAsFailed(${quest.id})">
-                    Fail
-                </button>
                 <h3>${quest.title}</h3>
                 <p>${quest.description}</p>
                 <div class="quest-details">
@@ -113,6 +311,14 @@ function displayQuests(quests) {
                     <img src="./assets/icons/clock.png" alt="clock">
                     <span>${timeRemaining || 'Time expired!'}</span>
                 </div>
+                </div>
+                <div class="quest-actions">
+                    <button class="complete-btn" onclick="markQuestAsCompleted(${quest.id})">
+                        Complete
+                    </button>
+                    <button class="fail-btn" onclick="markQuestAsFailed(${quest.id})">
+                        Fail
+                    </button>
                 </div>
             `;
             
@@ -159,12 +365,22 @@ function markQuestAsCompleted(questId) {
     if (quest) {
         if (quest.status === 'completed') {
             quest.status = 'active';
+            addGold(-quest.reward);
         } else {
             quest.status = 'completed';
+            addGold(quest.reward);
+            
+            if (!quest.hasDamaged) {
+                const damage = calculateDamage(quest.priority);
+                damageEnemy(damage);
+                quest.hasDamaged = true;
+                playAttackAnimation();
+            }
         }
         updateQuestInStorage(questId, quest);
         updateQuestCard(questId, quest);
         filterAndSortQuests();
+        savePlayerData();
     }
 }
 
@@ -179,10 +395,16 @@ function markQuestAsFailed(questId) {
             }
         } else {
             quest.status = 'failed';
+            if (!quest.hasPlayerDamaged) {
+                const damage = calculatePlayerDamage(quest.priority);
+                damagePlayer(damage);
+                quest.hasPlayerDamaged = true;
+            }
         }
         updateQuestInStorage(questId, quest);
         updateQuestCard(questId, quest);
         filterAndSortQuests();
+        savePlayerData();
     }
 }
 
@@ -310,13 +532,34 @@ function calculateTimeRemaining(timeLimit) {
 }
 
 function updateTimeRemaining() {
-    const questItems = document.querySelectorAll('.quest-item:not(.add-quest-card)');
+    const quests = loadQuestsFromStorage();
+    let hasChanges = false;
     
+    quests.forEach(quest => {
+        const timeRemaining = calculateTimeRemaining(quest.timeLimit);
+        
+        if (timeRemaining === '' && quest.status !== 'failed' && quest.status !== 'completed') {
+            quest.status = 'failed';
+            if (!quest.hasPlayerDamaged) {
+                const damage = calculatePlayerDamage(quest.priority);
+                damagePlayer(damage);
+                quest.hasPlayerDamaged = true;
+            }
+            hasChanges = true;
+        }
+    });
+    
+    if (hasChanges) {
+        saveQuestsToStorage(quests);
+        filterAndSortQuests();
+        savePlayerData();
+    }
+    
+    const questItems = document.querySelectorAll('.quest-item:not(.add-quest-card)');
     questItems.forEach(item => {
         const timeLimitElement = item.querySelector('.time-limit span');
         if (timeLimitElement) {
             const questId = parseInt(item.dataset.questId);
-            const quests = loadQuestsFromStorage();
             const quest = quests.find(q => q.id === questId);
             
             if (quest) {
@@ -329,6 +572,10 @@ function updateTimeRemaining() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadPlayerData();
+    loadEnemyData();
+    updateOldQuests();
+    
     const quests = loadQuestsFromStorage();
     
     if (quests.length > 0) {
@@ -361,12 +608,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="delete-quest-btn" onclick="deleteQuest(${quest.id})">
                     <img src="./assets/icons/close.png" alt="delete">
                 </button>
-                <button class="complete-btn" onclick="markQuestAsCompleted(${quest.id})">
-                    Complete
-                </button>
-                <button class="fail-btn" onclick="markQuestAsFailed(${quest.id})">
-                    Fail
-                </button>
                 <h3>${quest.title}</h3>
                 <p>${quest.description}</p>
                 <div class="quest-details">
@@ -379,6 +620,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="./assets/icons/clock.png" alt="clock">
                     <span>${timeRemaining || 'Time expired!'}</span>
                 </div>
+                </div>
+                <div class="quest-actions">
+                    <button class="complete-btn" onclick="markQuestAsCompleted(${quest.id})">
+                        Complete
+                    </button>
+                    <button class="fail-btn" onclick="markQuestAsFailed(${quest.id})">
+                        Fail
+                    </button>
                 </div>
             `;
             
@@ -413,8 +662,9 @@ document.addEventListener('DOMContentLoaded', () => {
         questList.appendChild(addQuestCard);
         
         updateTimeRemaining();
-        setInterval(updateTimeRemaining, 60000);
     }
+    
+    setInterval(updateTimeRemaining, 10000);
     
     questForm.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -588,7 +838,9 @@ questForm.addEventListener('submit', (e) => {
             description: description,
             reward: finalReward,
             timeLimit: timeLimit,
-            priority: priority
+            priority: priority,
+            hasDamaged: false,
+            hasPlayerDamaged: false
         };
 
         const questItem = document.createElement('div');
@@ -719,5 +971,13 @@ function showQuestDetail(questId) {
         prioritySpan.className = `priority ${quest.priority}`;
         
         detailModal.showModal();
+    }
+}
+
+function resetAllData() {
+    if (confirm('Tüm verileri sıfırlamak istediğinizden emin misiniz?')) {
+        localStorage.clear();
+        alert('Tüm veriler sıfırlandı! Sayfa yenileniyor...');
+        location.reload();
     }
 }
