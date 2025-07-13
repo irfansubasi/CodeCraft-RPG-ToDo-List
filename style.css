@@ -314,6 +314,15 @@ header{
     min-height: 180px;
     height: auto;
     position: relative;
+    transition: all 0.3s ease;
+}
+
+.quest-item:hover {
+    transform: scale(1.05);
+    background-color: #f4e4bc;
+    border-color: #8b6b2f;
+    cursor: pointer;
+    
 }
 
 .quest-item h3 {

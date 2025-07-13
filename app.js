@@ -13,6 +13,43 @@ let isEditMode = false;
 let currentEditQuestId = null;
 let currentDetailQuestId = null;
 
+function calculateTimeRemaining(timeLimit) {
+    const now = new Date();
+    const limit = new Date(timeLimit);
+    const diff = limit - now;
+    
+    if (diff <= 0) {
+        return '';
+    }
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    } else {
+        return `${minutes}m`;
+    }
+}
+
+function updateTimeRemaining() {
+    const questItems = document.querySelectorAll('.quest-item:not(.add-quest-card)');
+    
+    questItems.forEach(item => {
+        const timeLimitElement = item.querySelector('.time-limit span');
+        if (timeLimitElement) {
+            const questId = parseInt(item.dataset.questId);
+            const quests = loadQuestsFromStorage();
+            const quest = quests.find(q => q.id === questId);
+            
+            if (quest) {
+                const timeRemaining = calculateTimeRemaining(quest.timeLimit);
+                timeLimitElement.textContent = timeRemaining;
+            }
+        }
+    });
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const quests = loadQuestsFromStorage();
@@ -44,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="time-limit">
                     <img src="./assets/icons/clock.png" alt="clock">
-                    <span>${quest.timeLimit}</span>
+                    <span>${calculateTimeRemaining(quest.timeLimit)}</span>
                 </div>
                 </div>
             `;
@@ -77,31 +114,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         questList.appendChild(addQuestCard);
+        
+        updateTimeRemaining();
+        setInterval(updateTimeRemaining, 60000);
     }
     
-    // Modal dışına tıklama event listener'ları
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.close();
-            questForm.reset();
-            isEditMode = false;
-            currentEditQuestId = null;
-            document.querySelector('#quest-modal h2').textContent = 'Add Quest';
-            document.querySelector('#quest-modal .confirm-btn').textContent = 'Add Quest';
-        }
+    questForm.addEventListener('click', (e) => {
+        e.stopPropagation();
     });
     
-    deleteModal.addEventListener('click', (e) => {
-        if (e.target === deleteModal) {
-            deleteModal.close();
-        }
+    document.querySelector('.delete-modal-content').addEventListener('click', (e) => {
+        e.stopPropagation();
     });
     
-    detailModal.addEventListener('click', (e) => {
-        if (e.target === detailModal) {
-            detailModal.close();
-            currentDetailQuestId = null;
-        }
+    document.querySelector('.detail-modal-content').addEventListener('click', (e) => {
+        e.stopPropagation();
     });
 });
 
@@ -216,7 +243,7 @@ questForm.addEventListener('submit', (e) => {
                 </div>
                 <div class="time-limit">
                     <img src="./assets/icons/clock.png" alt="clock">
-                    <span>${timeLimit}</span>
+                    <span>${calculateTimeRemaining(timeLimit)}</span>
                 </div>
                 </div>
             `;
@@ -256,7 +283,7 @@ questForm.addEventListener('submit', (e) => {
             </div>
             <div class="time-limit">
                 <img src="./assets/icons/clock.png" alt="clock">
-                <span>${timeLimit}</span>
+                <span>${calculateTimeRemaining(timeLimit)}</span>
             </div>
             </div>
         `;
@@ -326,7 +353,9 @@ function showQuestDetail(questId) {
         document.querySelector('#detail-title').textContent = quest.title;
         document.querySelector('#detail-description').textContent = quest.description || 'No description provided';
         document.querySelector('#detail-reward').textContent = quest.reward;
-        document.querySelector('#detail-time-limit').textContent = quest.timeLimit;
+        
+        const timeLimitText = `${quest.timeLimit} (${calculateTimeRemaining(quest.timeLimit)})`;
+        document.querySelector('#detail-time-limit').textContent = timeLimitText;
         
         const prioritySpan = document.querySelector('#detail-priority');
         prioritySpan.textContent = quest.priority.toUpperCase();
