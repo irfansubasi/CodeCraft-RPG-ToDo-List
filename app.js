@@ -806,25 +806,54 @@ function updateEnemyName() {
 
 let isSoundMuted = false;
 let backgroundMusic;
+let audioInitialized = false;
 
 function initBackgroundMusic() {
-    backgroundMusic = new Audio('./assets/theme.mp3');
-    backgroundMusic.loop = true;
-    backgroundMusic.volume = 0.3;
+    try {
+        backgroundMusic = new Audio('./assets/theme.mp3');
+        backgroundMusic.loop = true;
+        backgroundMusic.volume = 0.3;
+        backgroundMusic.preload = 'auto';
+        
+        backgroundMusic.addEventListener('canplaythrough', () => {
+            console.log('Audio loaded successfully');
+        });
+        
+        backgroundMusic.addEventListener('error', (e) => {
+            console.error('Audio loading error:', e);
+        });
+        
+        audioInitialized = true;
+    } catch (error) {
+        console.error('Error initializing audio:', error);
+    }
 }
 
 function toggleSound() {
     const soundBtn = document.querySelector('.sound-btn');
     
+    if (!audioInitialized) {
+        initBackgroundMusic();
+    }
+    
     if (isSoundMuted) {
         isSoundMuted = false;
-        backgroundMusic.play();
+        if (backgroundMusic) {
+            backgroundMusic.play().then(() => {
+                console.log('Audio started successfully via toggle');
+            }).catch(e => {
+                console.log('Audio autoplay blocked by browser');
+                showNotification('Click anywhere to enable sound!', 'purchase-notification');
+            });
+        }
         soundBtn.textContent = '🔊';
         soundBtn.classList.remove('muted');
         showNotification('Sound enabled!', 'purchase-notification');
     } else {
         isSoundMuted = true;
-        backgroundMusic.pause();
+        if (backgroundMusic) {
+            backgroundMusic.pause();
+        }
         soundBtn.textContent = '🔇';
         soundBtn.classList.add('muted');
         showNotification('Sound disabled!', 'purchase-notification');
@@ -832,9 +861,19 @@ function toggleSound() {
 }
 
 function startBackgroundMusic() {
-    if (!isSoundMuted && backgroundMusic) {
+    if (!isSoundMuted && backgroundMusic && audioInitialized) {
         backgroundMusic.play().catch(e => {
-            console.log('Audio autoplay blocked by browser');
+            console.log('Audio autoplay blocked by browser - user interaction required');
+        });
+    }
+}
+
+function enableAudioOnUserInteraction() {
+    if (backgroundMusic && !isSoundMuted) {
+        backgroundMusic.play().then(() => {
+            console.log('Audio started successfully after user interaction');
+        }).catch(e => {
+            console.log('Audio still blocked:', e);
         });
     }
 }
@@ -1587,6 +1626,9 @@ function handleSetupForm(event) {
         
         window.scrollTo(0, 0);
         
+        // Enable audio after setup
+        enableAudioOnUserInteraction();
+        
         showNotification('Welcome to the adventure!', 'purchase-notification');
         
     } catch (error) {
@@ -1625,6 +1667,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForm.addEventListener('submit', handleSetupForm);
     
     startBackgroundMusic();
+    
+    // Add user interaction listeners to enable audio
+    const enableAudioOnClick = () => {
+        enableAudioOnUserInteraction();
+        document.removeEventListener('click', enableAudioOnClick);
+        document.removeEventListener('keydown', enableAudioOnClick);
+        document.removeEventListener('touchstart', enableAudioOnClick);
+    };
+    
+    document.addEventListener('click', enableAudioOnClick);
+    document.addEventListener('keydown', enableAudioOnClick);
+    document.addEventListener('touchstart', enableAudioOnClick);
 });
 
 function showHelpModal() {
